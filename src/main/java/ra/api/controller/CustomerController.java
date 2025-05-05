@@ -16,6 +16,7 @@ import java.util.List;
 @RestController // chú thích đây là controller trả về dữ liệu JSON
 @RequestMapping("/customers")
 @RequiredArgsConstructor
+//@CrossOrigin("*")
 public class CustomerController {
     private final ICustomerService customerService;
     // các nhóm mã quan trọng : 2xx(200,201,204), 4xx(400, 401, 403, 404), 5xx(lỗi server , pha xử lỹ)
@@ -45,4 +46,6 @@ public class CustomerController {
         customerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    // BTVN : viết API tìm kiếm , phân trang và sắp xếp (page, size, sortDirection, sortBy, keyword) => trả về thông tin phân trang (page, size, sort(by, direction), keyword, contentList, totalPage)
  }
