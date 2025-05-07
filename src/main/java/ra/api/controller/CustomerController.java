@@ -2,6 +2,7 @@ package ra.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ra.api.model.dto.request.CustomerAddDto;
 import ra.api.model.dto.request.CustomerUpdateDto;
+import ra.api.model.dto.response.PageDto;
 import ra.api.model.entity.Customer;
 import ra.api.service.ICustomerService;
 
@@ -26,10 +28,12 @@ public class CustomerController {
     // các nhóm mã quan trọng : 2xx(200,201,204), 4xx(400, 401, 403, 404), 5xx(lỗi server , pha xử lỹ)
     // api ấy về danh sách
     @GetMapping // gọi là các endpoint
-    public ResponseEntity<Map<String,List<Customer>>> getCustomers(){
-        Map<String,List<Customer>> map = new HashMap<>();
-        map.put("data",customerService.getCustomers());
-       return new ResponseEntity<>(map, HttpStatus.OK);
+    public ResponseEntity<PageDto<Customer>> getCustomers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "2") int size
+    ){
+
+       return new ResponseEntity<>(customerService.getCustomersPagination(page, size), HttpStatus.OK);
     }
     // api ấy về danh sách
     @GetMapping("/{id}")

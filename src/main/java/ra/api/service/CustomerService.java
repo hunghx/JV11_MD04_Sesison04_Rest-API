@@ -2,10 +2,14 @@ package ra.api.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ra.api.exception.NotFoundException;
 import ra.api.model.dto.request.CustomerAddDto;
 import ra.api.model.dto.request.CustomerUpdateDto;
+import ra.api.model.dto.response.PageDto;
 import ra.api.model.entity.Customer;
 import ra.api.model.mapper.CustomerMapper;
 import ra.api.repository.ICustomerRepository;
@@ -24,6 +28,22 @@ public class CustomerService implements ICustomerService{
     @Override
     public Customer getCustomersById(Long id) {
         return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("ID không tìm thấy"));
+    }
+
+    @Override
+    public PageDto<Customer> getCustomersPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Customer> pageCus = customerRepository.findAll(pageable);
+        // biến đoi thành Page DTO
+        PageDto<Customer> pageDto = new PageDto<>();
+        pageDto.setPages(pageCus.getTotalPages());
+        pageDto.setNext(pageCus.hasNext()?page+1:null);
+        pageDto.setPrev(pageCus.hasPrevious()?page-1:null);
+        pageDto.setLast(pageCus.getTotalPages()-1);
+        pageDto.setFirst(0);
+        pageDto.setItems(pageCus.getTotalElements());
+        pageDto.setData(pageCus.getContent());
+        return pageDto;
     }
 
     @Override
