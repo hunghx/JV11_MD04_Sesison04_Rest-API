@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import ra.api.model.entity.Role;
 import ra.api.model.entity.RoleName;
@@ -60,24 +61,26 @@ public class RestFulApiApplication {
     }
 
     @Bean
-    public CommandLineRunner runner(IUserRepository userRepository, IRoleRepository roleRepository){
+    public CommandLineRunner runner(PasswordEncoder passwordEncoder, IUserRepository userRepository, IRoleRepository roleRepository){
 
         return args -> {
-            Role u = new Role(null, RoleName.USER);
-            Role a = new Role(null, RoleName.ADMIN);
-            Role m = new Role(null, RoleName.MANAGER);
-            roleRepository.save(u);
-            roleRepository.save(a);
-            roleRepository.save(m);
-
-            User s1 = new User(null,"admin","admin@gmail.com",null, "admin123",null, null, null, LocalDate.now(), null, true, false, new HashSet<>());
-            User s2 = new User(null,"hunghx","hung@gmail.com","Ho Xuan Hung", "123456$",null, "09783454356", "HCM", LocalDate.now(), null, true, false, new HashSet<>());
-            s1.getRoleSet().add(roleRepository.findById(1L).orElseThrow());
-            s1.getRoleSet().add(roleRepository.findById(2L).orElseThrow());
-            s1.getRoleSet().add(roleRepository.findById(3L).orElseThrow());
-            s2.getRoleSet().add(roleRepository.findById(1L).orElseThrow());
-            userRepository.save(s1);
-            userRepository.save(s2);
+//            Role u = new Role(null, RoleName.USER);
+//            Role a = new Role(null, RoleName.ADMIN);
+//            Role m = new Role(null, RoleName.MANAGER);
+//            roleRepository.save(u);
+//            roleRepository.save(a);
+//            roleRepository.save(m);
+//
+//            User s1 = new User(null,"admin","admin@gmail.com",null, "admin123",null, null, null, LocalDate.now(), null, true, false, new HashSet<>());
+//            User s2 = new User(null,"hunghx","hung@gmail.com","Ho Xuan Hung", "123456$",null, "09783454356", "HCM", LocalDate.now(), null, true, false, new HashSet<>());
+//            s1.getRoleSet().add(roleRepository.findById(1L).orElseThrow());
+//            s1.getRoleSet().add(roleRepository.findById(2L).orElseThrow());
+//            s1.getRoleSet().add(roleRepository.findById(3L).orElseThrow());
+//            s2.getRoleSet().add(roleRepository.findById(1L).orElseThrow());
+//            userRepository.save(s1);
+//            userRepository.save(s2);
+            System.out.println(passwordEncoder.encode("admin123"));
+            System.out.println(passwordEncoder.encode("123456"));
         };
     }
 }
